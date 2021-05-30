@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Map } from './Map/Map';
 import { HistoricalTable } from 'Table/HistoricalTable';
+import { Button } from '@material-ui/core';
+import { BusTrackingModal } from 'Modal/BusTrackingModal';
 
 const places = [
   { latitude: 41.1675503, longitude: -8.687209 },
@@ -9,11 +11,17 @@ const places = [
   { latitude: 41.154613, longitude: -8.613325 },
 ];
 
+const busId = '00000000-0000-0000-0000-000000002518';
+
 function App() {
   // const { isLoaded, loadError } = useLoadScript({
   //   googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY ? ,
   //   libraries,
   // });
+
+  const [isBusTrackingModalOpen, setIsBusTrackingModalOpen] = useState<boolean>(
+    false
+  );
 
   return (
     <div className='App'>
@@ -27,6 +35,15 @@ function App() {
       >
         <HistoricalTable />
       </div>
+      <Button onClick={() => setIsBusTrackingModalOpen(true)}>
+        Track bus 2518
+      </Button>
+      {isBusTrackingModalOpen && (
+        <BusTrackingModal
+          isOpen={isBusTrackingModalOpen}
+          closeModal={() => {}}
+        />
+      )}
     </div>
   );
 }

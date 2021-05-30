@@ -36,11 +36,6 @@ def convert_csv_json(file_name):
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    print("Starting converting CSV to JSON and send it...")
-    convert_csv_json("etc/node_data.csv")
-=======
     print("Converting CSV to JSON and send it...")
-    #convert_csv_json("node_data.csv")
+    convert_csv_json("node_data.csv")
     print("Sending data...")
->>>>>>> bf4e82627d28eb9dde16c2459aaa89157f76c90d
