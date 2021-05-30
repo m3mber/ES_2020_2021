@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Map } from './Map/Map';
 import { HistoricalTable } from 'Table/HistoricalTable';
@@ -22,10 +22,26 @@ function App() {
   const [isBusTrackingModalOpen, setIsBusTrackingModalOpen] = useState<boolean>(
     false
   );
+  // const [currentPosition, setCurrentPosition] = useState<any>({});
+
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(success);
+  // }, []);
+
+  // const success = (position: any) => {
+  //   const currentPosition = {
+  //     lat: position.coords.latitude,
+  //     lng: position.coords.longitude,
+  //   };
+  //   setCurrentPosition(currentPosition);
+  // };
+
+  // console.log(currentPosition);
 
   return (
     <div className='App'>
       <Map markers={places} />
+      {/*  {center={currentPosition}} */}
       <div
         style={{
           padding: 50,

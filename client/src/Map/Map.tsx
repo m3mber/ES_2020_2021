@@ -15,7 +15,6 @@ function MapDirectionsRenderer(props: { places: any; travelMode: any }) {
 
   useEffect(() => {
     const { places, travelMode } = props;
-
     const waypoints: any[] = [];
     places.forEach((p: any) => {
       waypoints.push({
@@ -36,7 +35,6 @@ function MapDirectionsRenderer(props: { places: any; travelMode: any }) {
         waypoints: waypoints,
       },
       (result: any, status) => {
-        console.log(result);
         if (status === google.maps.DirectionsStatus.OK) {
           setDirections(result);
         } else {
@@ -78,22 +76,23 @@ const Map = compose(
     onToggleOpen: any;
     isOpen: any;
     markers: any;
-  }) => (
-    <GoogleMap defaultZoom={12} defaultCenter={props.center} props>
-      <>
-        {props.markers.map((marker: any, index: number) => (
-          <Marker
-            key={index}
-            position={{ lat: marker.latitude, lng: marker.longitude }}
+  }) =>
+    props.center.lat && (
+      <GoogleMap defaultZoom={12} defaultCenter={props.center} props>
+        <>
+          {props.markers.map((marker: any, index: number) => (
+            <Marker
+              key={index}
+              position={{ lat: marker.latitude, lng: marker.longitude }}
+            />
+          ))}
+          <MapDirectionsRenderer
+            places={props.markers}
+            travelMode={google.maps.TravelMode.DRIVING}
           />
-        ))}
-        <MapDirectionsRenderer
-          places={props.markers}
-          travelMode={google.maps.TravelMode.DRIVING}
-        />
-      </>
-    </GoogleMap>
-  )
+        </>
+      </GoogleMap>
+    )
 );
 
 export { Map };
