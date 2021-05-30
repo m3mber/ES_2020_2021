@@ -39,7 +39,7 @@ function App() {
   // console.log(currentPosition);
 
   return (
-    <div className='App'>
+    <div className='App' style={{ flexDirection: 'column' }}>
       <Map markers={places} />
       {/*  {center={currentPosition}} */}
       <div
@@ -51,13 +51,21 @@ function App() {
       >
         <HistoricalTable />
       </div>
-      <Button onClick={() => setIsBusTrackingModalOpen(true)}>
-        Track bus 2518
-      </Button>
+      <div style={{ position: 'absolute', top: '50%', left: '20' }}>
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => setIsBusTrackingModalOpen(true)}
+        >
+          Track bus 2518
+        </Button>
+      </div>
       {isBusTrackingModalOpen && (
         <BusTrackingModal
           isOpen={isBusTrackingModalOpen}
-          closeModal={() => {}}
+          closeModal={() => {
+            setIsBusTrackingModalOpen(false);
+          }}
         />
       )}
     </div>

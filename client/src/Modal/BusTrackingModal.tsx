@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SOCKET_URL = 'http://localhost:8081/real-time/location';
+const SOCKET_URL = 'http://localhost:8080/real-time/location';
 
 const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   isOpen,
@@ -97,7 +97,9 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
           onMessage={(msg: any) => onMessageReceived(msg)}
           debug={false}
         />
-        <Typography>{messages[0].location_id}</Typography>
+        {messages.length > 0 && (
+          <Typography>{messages[0].location_id}</Typography>
+        )}
         <IconButton
           className={classes.exitButton}
           onClick={() => {

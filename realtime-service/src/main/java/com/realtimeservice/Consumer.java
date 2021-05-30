@@ -32,6 +32,7 @@ public class Consumer {
         try {
             DataBusInfo dataBusInfo = objectMapper.readValue(msg, DataBusInfo.class);
             System.out.println("Id: " + dataBusInfo.getId() + "node: " + dataBusInfo.getNode_id());
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
