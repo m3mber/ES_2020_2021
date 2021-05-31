@@ -21,20 +21,23 @@ public class Consumer {
     public void consume(String message) throws IOException {
 
         message = message.replaceAll("[\\[\\]\\(\\)]", "");
-        setMessage(message);
+        //setMessage(message);
         System.out.println(message);
-        logger.info(String.format("#### -> Consumed message -> %s", message));
+        //logger.info(String.format("#### -> Consumed message -> %s", message));
     }
 
     private void setMessage(String message) {
         msg = message;
-        ObjectMapper objectMapper = new ObjectMapper();
+
+        /*** WORKING ON ****/
+
+        /*ObjectMapper objectMapper = new ObjectMapper();
         try {
             DataBusInfo dataBusInfo = objectMapper.readValue(msg, DataBusInfo.class);
             System.out.println("Id: " + dataBusInfo.getId() + "node: " + dataBusInfo.getNode_id());
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
