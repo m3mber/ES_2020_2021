@@ -10,6 +10,6 @@ for i in ${!MODULES[@]}; do
 
 	rm -rf target	
 	mvn -U install
-	mvn -X -Dmaven.test.skip=true --settings ../settings.xml deploy
+	mvn -f pom.xml clean package --settings ../settings.xml deploy
 	cd ..
 done
