@@ -1,4 +1,4 @@
-#from kafka import KafkaProducer
+from kafka import KafkaProducer
 import csv
 import json
 import time
@@ -10,7 +10,6 @@ producer = KafkaProducer(bootstrap_servers=["192.168.160.18:19092"])
 
 def produce_message(data):
     try:
-        print("STATUS: Producing message..")
         producer.send("ESP13_bus_data", json.dumps(data["bus_data"]).encode('utf-8'))
     except:
         print("STATUS: An exception occurred while producing data do Kafka")
@@ -37,5 +36,6 @@ def convert_csv_json(file_name):
 
 if __name__ == "__main__":
     print("Converting CSV to JSON and send it...")
-    convert_csv_json("node_data.csv")
     print("Sending data...")
+    convert_csv_json("node_data.csv")
+   
