@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.service.bustracker.model.DataBusInfo;
+import com.service.bustracker.publisher.KafkaProducer;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,25 +25,29 @@ public class KafkaConsumer
 {
     private String msg;
     private List<DataBusInfo> allBus = new ArrayList<DataBusInfo>();
+
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
+
     /** Consume real time data
      * Topic will be changed to ESP13_distance_alarm
      */
     @KafkaListener(topics="ESP13_bus_data", groupId = "group_1")
     public void consume(String message)
     {
-        /* Remove characters [ ] from the receiced message */
-        //message = message.replaceAll("[\\[\\]\\(\\)]", "");
-        System.out.println("{'data_bus' : " + message + "}");
+        /* JSON format */
         String s = "{'data_bus' : " + message + "}";
-        /* Set the String message to an Object */
 
+        /* Set the String message to an Object */
         JSONObject root = new JSONObject(s);
 
+        /* Getting JSON array */
         JSONArray dataBusArr = root.getJSONArray("data_bus");
 
         for (int i = 0; i < dataBusArr.length(); i++)
         {
-            /*JSON Data*/
+            /* Retrieving JSON Data */
             JSONObject jsonDataBus = dataBusArr.getJSONObject(i);
             DataBusInfo dataBus = new DataBusInfo();
 
@@ -54,11 +61,15 @@ public class KafkaConsumer
             String ts = jsonDataBus.getString("ts");
             String write_time = jsonDataBus.getString("write_time");
 
-            /* GET USER CURRENT LOCATION  FROM REACT */
+            /* TODO: GET USER CURRENT LOCATION FROM REACT, AND CALCULATE THE DISTANCE */
             System.out.println("\nLON: " + lon + "\nLAT: " + lat);
-            /* Populate DataBusInfo */
 
-            /*dataBus.setId(Long.parseLong(id));
+            /* Sending message to Kafka Alarm topic if bus is near */
+            sendMessage("Lon: " + lon + " Lat: " + lat);
+
+
+            /* Populate DataBusInfo */
+            /* dataBus.setId(Long.parseLong(id));
             dataBus.setNode_id(node_id);
             dataBus.setLocation_id(Integer.parseInt(location_id));
             dataBus.setHead(Double.parseDouble(head));
@@ -78,5 +89,11 @@ public class KafkaConsumer
             /* allBus.add(dataBus);
             System.out.println("Adding to dataBus object"); */
         }
+    }
+
+    public void sendMessage(String message)
+    {
+        System.out.println("Producing message to Alarm");
+        kafkaTemplate.send("ESP13_distance_alarm", message);
     }
 }
