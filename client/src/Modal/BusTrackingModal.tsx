@@ -7,11 +7,11 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import SockJsClient from 'react-stomp';
 
 export interface IBusTrackingModalProps {
   isOpen: boolean;
   closeModal: Function;
+  busId: string;
 }
 
 export interface IMessageData {
@@ -64,23 +64,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SOCKET_URL = 'http://localhost:8080/real-time/location';
+//const SOCKET_URL = 'http://localhost:8080/real-time/location';
 
 const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   isOpen,
   closeModal,
+  busId,
 }) => {
   const classes = useStyles();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [messages, setMessages] = useState<IMessageData[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [messages, setMessages] = useState<IMessageData[]>([]);
 
-  let onConnected = () => {
-    console.log('Connected!!');
-  };
-  let onMessageReceived = (msg: IMessageData) => {
-    console.log('New Message Received!!', msg);
-    setMessages(messages.concat(msg));
-  };
+  let eventSource: EventSource | undefined = undefined;
+  const [listening, setListening] = useState(false);
+  const [data, setData] = useState<string[]>([]);
+
+  console.log(data);
+  useEffect(() => {
+    if (!listening) {
+      eventSource = new EventSource(`http://localhost:8080/time?id=${busId}`);
+
+      eventSource.onopen = (event) => {
+        console.log('connection opened');
+      };
+
+      eventSource.onmessage = (event) => {
+        console.log('result', event.data);
+        setData((old) => [...old, event.data]);
+      };
+
+      eventSource.onerror = (event: any) => {
+        console.log(event);
+        if (eventSource && event.target) {
+          console.log(event.target.readyState);
+          if (event.target.readyState === EventSource.CLOSED) {
+            console.log('eventsource closed (' + event.target.readyState + ')');
+          }
+          eventSource.close();
+        }
+      };
+
+      setListening(true);
+    }
+    return () => {
+      eventSource && eventSource.close();
+      console.log('eventsource closed');
+    };
+  }, []);
 
   return (
     <Modal
@@ -89,17 +119,8 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
       open={isOpen}
     >
       <div className={classes.modalDiv}>
-        <SockJsClient
-          url={SOCKET_URL}
-          topics={['/ESP13_bus_data']}
-          onConnect={onConnected}
-          onDisconnect={console.log('Disconnected!')}
-          onMessage={(msg: any) => onMessageReceived(msg)}
-          debug={false}
-        />
-        {messages.length > 0 && (
-          <Typography>{messages[0].location_id}</Typography>
-        )}
+        {data.length > 0 &&
+          data.map((item: any) => <Typography>{item}</Typography>)}
         <IconButton
           className={classes.exitButton}
           onClick={() => {

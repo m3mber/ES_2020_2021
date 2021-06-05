@@ -63,6 +63,7 @@ function App() {
       {isBusTrackingModalOpen && (
         <BusTrackingModal
           isOpen={isBusTrackingModalOpen}
+          busId={busId}
           closeModal={() => {
             setIsBusTrackingModalOpen(false);
           }}
