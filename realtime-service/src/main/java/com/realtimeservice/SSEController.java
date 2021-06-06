@@ -2,6 +2,8 @@ package com.realtimeservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,8 +21,36 @@ public class SSEController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SSEController.class);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Consumer kafkaConsumer = new Consumer();
 
+    private static String lat;
+    private static String lon;
+    private static String bus_id;
+
+    /* Static bus id */
+    /* todo: Dynamic bus id button */
+    private String static_bus_id = "00000000-0000-0000-0000-000000002518";
+
+    /*
+     * __________________________________________________________________________________________
+     */
+    public SSEController() {
+    }
+
+    public void setBusId(String id) {
+        this.bus_id = id;
+    }
+
+    public void setLatitude(String lat) {
+        this.lat = lat;
+    }
+
+    public void setLongitude(String lon) {
+        this.lon = lon;
+    }
+
+    /*
+     * __________________________________________________________________________________________
+     */
     @PostConstruct
     public void init() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -49,19 +79,19 @@ public class SSEController {
         });
         executor.execute(() -> {
             while (true) {
+
                 try {
-                    if (kafkaConsumer.dataBusInfo != null && kafkaConsumer.dataBusInfo.getNode_id().equals(id)) {
-                        String latLong = kafkaConsumer.dataBusInfo.getLat() + "," + kafkaConsumer.dataBusInfo.getLon();
-                        sseEmitter.send(latLong);
+                    if (this.lat != null && this.lon != null && this.bus_id.equals(static_bus_id)) {
+                        sseEmitter.send("Bus id: " + this.bus_id + " Lat: " + this.lat + " Lon: " + this.lon);
                     }
 
                     sleep(1, sseEmitter);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     sseEmitter.completeWithError(e);
                 }
             }
-
         });
 
         LOGGER.info("Controller exits");
