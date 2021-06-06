@@ -23,7 +23,7 @@ def convert_csv_json(file_name):
         data = {"bus_data": []}
 
         for row in reader:
-            time.sleep(5)
+            time.sleep(1.5)
             data["bus_data"].append(
                 {"id": row[0], "node_id": row[1], "location_id": row[2], "head": row[3], "lon": row[4], "lat": row[5],
                  "speed": row[6], "ts": row[7], "write_time": row[8]})
