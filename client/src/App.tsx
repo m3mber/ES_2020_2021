@@ -4,7 +4,6 @@ import { Map } from './Map/Map';
 import { HistoricalTable } from 'Table/HistoricalTable';
 import { Button } from '@material-ui/core';
 import { BusTrackingModal } from 'Modal/BusTrackingModal';
-import { BusAlarmModal } from 'Modal/BusAlarmModal';
 
 const places = [
   { latitude: 41.1675503, longitude: -8.687209 },
@@ -50,6 +49,7 @@ function App() {
     );
     console.log(response);
   };
+
   return (
     <div className='App' style={{ flexDirection: 'column' }}>
       <Map markers={places} />
@@ -90,16 +90,6 @@ function App() {
           }}
         />
       )}
-
-      {/* {isBusAlarmModalOpen && (
-        <BusAlarmModal
-          isOpen={isBusAlarmModalOpen}
-          busId={busId}
-          closeModal={() => {
-            setIsBusAlarmModelOpen(false);
-          }}
-        />
-      )} */}
     </div>
   );
 }
