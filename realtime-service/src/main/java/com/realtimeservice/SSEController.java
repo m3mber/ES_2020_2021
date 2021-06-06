@@ -12,8 +12,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,29 +27,30 @@ public class SSEController {
     private static String bus_id;
 
     /* Static bus id */
-    /*todo: Dynamic bus id button */
+    /* todo: Dynamic bus id button */
     private String static_bus_id = "00000000-0000-0000-0000-000000002518";
 
-    /*__________________________________________________________________________________________*/
-    public SSEController() {}
+    /*
+     * __________________________________________________________________________________________
+     */
+    public SSEController() {
+    }
 
-    public void setBusId(String id)
-    {
+    public void setBusId(String id) {
         this.bus_id = id;
     }
 
-    public void setLatitude(String lat)
-    {
+    public void setLatitude(String lat) {
         this.lat = lat;
     }
 
-    public void setLongitude(String lon)
-    {
+    public void setLongitude(String lon) {
         this.lon = lon;
     }
 
-
-    /*__________________________________________________________________________________________*/
+    /*
+     * __________________________________________________________________________________________
+     */
     @PostConstruct
     public void init() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -64,10 +63,9 @@ public class SSEController {
         }));
     }
 
-    /*__________________________________________________________________________________________*/
-    @GetMapping("/time")
+    @GetMapping("/location")
     @CrossOrigin
-    public SseEmitter streamDateTime(@RequestParam String id) {
+    public SseEmitter streamRealTimeLocation(@RequestParam String id) {
 
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 
@@ -80,28 +78,26 @@ public class SSEController {
             sseEmitter.complete();
         });
         executor.execute(() -> {
-        while(true){
+            while (true) {
 
-               try {
-                   if (this.lat != null && this.lon != null && this.bus_id.equals(static_bus_id))
-                   {
-                       sseEmitter.send("Bus id: "+ this.bus_id + " Lat: " + this.lat + " Lon: "+ this.lon);
-                   }
+                try {
+                    if (this.lat != null && this.lon != null && this.bus_id.equals(static_bus_id)) {
+                        sseEmitter.send("Bus id: " + this.bus_id + " Lat: " + this.lat + " Lon: " + this.lon);
+                    }
 
-                   sleep(1, sseEmitter);
+                    sleep(1, sseEmitter);
 
-               } catch (IOException e) {
-                   e.printStackTrace();
-                   sseEmitter.completeWithError(e);
-               }
-           }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sseEmitter.completeWithError(e);
+                }
+            }
         });
 
         LOGGER.info("Controller exits");
         return sseEmitter;
     }
 
-    /*__________________________________________________________________________________________*/
     private void sleep(int seconds, SseEmitter sseEmitter) {
         try {
             Thread.sleep(seconds * 1000);

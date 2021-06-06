@@ -14,27 +14,24 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/** This service will be a Distance Service
- * Service will listen the ESP13_service_alarm and send information to client
- * when the bus is a stop away.
+/**
+ * This service will be a Distance Service Service will listen the
+ * ESP13_service_alarm and send information to client when the bus is a stop
+ * away.
  */
 @Service
-public class KafkaConsumer
-{
+public class KafkaConsumer {
     private String msg;
     private List<DataBusInfo> allBus = new ArrayList<DataBusInfo>();
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-
-    /** Consume real time data
-     * Topic will be changed to ESP13_distance_alarm
+    /**
+     * Consume real time data Topic will be changed to ESP13_distance_alarm
      */
-    @KafkaListener(topics="ESP13_bus_data", groupId = "group_1")
-    public void consume(String message)
-    {
+    @KafkaListener(topics = "ESP13_bus_data", groupId = "group_1")
+    public void consume(String message) {
         /* JSON format */
         String s = "{'data_bus' : " + message + "}";
 
@@ -44,8 +41,7 @@ public class KafkaConsumer
         /* Getting JSON array */
         JSONArray dataBusArr = root.getJSONArray("data_bus");
 
-        for (int i = 0; i < dataBusArr.length(); i++)
-        {
+        for (int i = 0; i < dataBusArr.length(); i++) {
             /* Retrieving JSON Data */
             JSONObject jsonDataBus = dataBusArr.getJSONObject(i);
             DataBusInfo dataBus = new DataBusInfo();
@@ -61,37 +57,33 @@ public class KafkaConsumer
             String write_time = jsonDataBus.getString("write_time");
 
             /* TODO: GET USER CURRENT LOCATION FROM REACT, AND CALCULATE THE DISTANCE */
+
             System.out.println("\nLON: " + lon + "\nLAT: " + lat);
 
             /* Sending message to Kafka Alarm topic if bus is near */
             sendMessage("Lon: " + lon + " Lat: " + lat);
 
-
             /* Populate DataBusInfo */
-            /* dataBus.setId(Long.parseLong(id));
-            dataBus.setNode_id(node_id);
-            dataBus.setLocation_id(Integer.parseInt(location_id));
-            dataBus.setHead(Double.parseDouble(head));
-            dataBus.setLon(lon);
-            dataBus.setLat(lat);
-
-            try {
-                dataBus.setSpeed(Integer.parseInt(speed));
-            } catch (Exception e) {
-                dataBus.setSpeed(Integer.parseInt("0"));
-            }
-            dataBus.setTs(ts);
-            dataBus.setWrite_time(write_time); */
+            /*
+             * dataBus.setId(Long.parseLong(id)); dataBus.setNode_id(node_id);
+             * dataBus.setLocation_id(Integer.parseInt(location_id));
+             * dataBus.setHead(Double.parseDouble(head)); dataBus.setLon(lon);
+             * dataBus.setLat(lat);
+             * 
+             * try { dataBus.setSpeed(Integer.parseInt(speed)); } catch (Exception e) {
+             * dataBus.setSpeed(Integer.parseInt("0")); } dataBus.setTs(ts);
+             * dataBus.setWrite_time(write_time);
+             */
 
             /* Add populated bus to our collection */
 
-            /* allBus.add(dataBus);
-            System.out.println("Adding to dataBus object"); */
+            /*
+             * allBus.add(dataBus); System.out.println("Adding to dataBus object");
+             */
         }
     }
 
-    public void sendMessage(String message)
-    {
+    public void sendMessage(String message) {
         System.out.println("Producing message to Alarm");
         kafkaTemplate.send("ESP13_distance_alarm", message);
     }

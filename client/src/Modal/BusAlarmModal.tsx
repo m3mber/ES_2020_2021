@@ -2,22 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Modal, IconButton, makeStyles } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-export interface IBusTrackingModalProps {
+export interface IBusAlarmModalProps {
   isOpen: boolean;
   closeModal: Function;
   busId: string;
-}
-
-export interface IMessageData {
-  id: number;
-  node_id: number;
-  location_id: number;
-  head: string;
-  lon: number;
-  lat: number;
-  speed: number;
-  ts: string;
-  write_time: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
+const BusAlarmModal: React.FC<IBusAlarmModalProps> = ({
   isOpen,
   closeModal,
   busId,
@@ -68,38 +56,31 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   let eventSource: EventSource | undefined = undefined;
   const [listening, setListening] = useState(false);
   const [data, setData] = useState<string[]>([]);
-
   useEffect(() => {
-    if (!listening) {
-      eventSource = new EventSource(
-        `http://localhost:8080/location?id=${busId}`
-      );
-
-      eventSource.onopen = (event) => {
-        console.log('connection opened');
-      };
-
-      eventSource.onmessage = (event) => {
-        console.log('result', event.data);
-        setData((old) => [...old, event.data]);
-      };
-
-      eventSource.onerror = (event: any) => {
-        if (eventSource && event.target) {
-          console.log(event.target.readyState);
-          if (event.target.readyState === EventSource.CLOSED) {
-            console.log('eventsource closed (' + event.target.readyState + ')');
-          }
-          eventSource.close();
-        }
-      };
-
-      setListening(true);
-    }
-    return () => {
-      eventSource && eventSource.close();
-      console.log('eventsource closed');
-    };
+    // if (!listening) {
+    //   eventSource = new EventSource(`http://localhost:8080/time?id=${busId}`);
+    //   eventSource.onopen = (event) => {
+    //     console.log('connection opened');
+    //   };
+    //   eventSource.onmessage = (event) => {
+    //     console.log('result', event.data);
+    //     setData((old) => [...old, event.data]);
+    //   };
+    //   eventSource.onerror = (event: any) => {
+    //     if (eventSource && event.target) {
+    //       console.log(event.target.readyState);
+    //       if (event.target.readyState === EventSource.CLOSED) {
+    //         console.log('eventsource closed (' + event.target.readyState + ')');
+    //       }
+    //       eventSource.close();
+    //     }
+    //   };
+    //   setListening(true);
+    // }
+    // return () => {
+    //   eventSource && eventSource.close();
+    //   console.log('eventsource closed');
+    // };
   }, []);
 
   return (
@@ -124,4 +105,4 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   );
 };
 
-export { BusTrackingModal };
+export { BusAlarmModal };
