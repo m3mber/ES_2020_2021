@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import DirectionsBusIcon from '@material-ui/icons/DirectionsBus';
+
 const { compose, withProps, withStateHandlers } = require('recompose');
 const {
   withScriptjs,
@@ -7,6 +9,7 @@ const {
   Marker,
   DirectionsRenderer,
 } = require('react-google-maps');
+
 const { InfoBox } = require('react-google-maps/lib/components/addons/InfoBox');
 
 function MapDirectionsRenderer(props: { places: any; travelMode: any }) {
@@ -83,6 +86,7 @@ const Map = compose(
           {props.markers.map((marker: any, index: number) => (
             <Marker
               key={index}
+              icon={DirectionsBusIcon}
               position={{ lat: marker.latitude, lng: marker.longitude }}
             />
           ))}

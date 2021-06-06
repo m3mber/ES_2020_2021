@@ -110,7 +110,9 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
     >
       <div className={classes.modalDiv}>
         {data.length > 0 &&
-          data.map((item: any) => <Typography>{item}</Typography>)}
+          data.map((item: any, index: number) => (
+            <Typography key={index}>{item}</Typography>
+          ))}
         <IconButton
           className={classes.exitButton}
           onClick={() => {

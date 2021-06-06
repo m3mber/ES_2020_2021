@@ -4,7 +4,6 @@ import { Map } from './Map/Map';
 import { HistoricalTable } from 'Table/HistoricalTable';
 import { Button } from '@material-ui/core';
 import { BusTrackingModal } from 'Modal/BusTrackingModal';
-import { BusAlarmModal } from 'Modal/BusAlarmModal';
 
 const places = [
   { latitude: 41.1675503, longitude: -8.687209 },
@@ -12,7 +11,7 @@ const places = [
   { latitude: 41.154613, longitude: -8.613325 },
 ];
 
-const busId = '00000000-0000-0000-0000-000000002518';
+const busId = '00000000-0000-0000-0000-000000002481';
 
 function App() {
   // const { isLoaded, loadError } = useLoadScript({
@@ -50,6 +49,7 @@ function App() {
     );
     console.log(response);
   };
+
   return (
     <div className='App' style={{ flexDirection: 'column' }}>
       <Map markers={places} />
@@ -69,7 +69,7 @@ function App() {
           color='primary'
           onClick={() => setIsBusTrackingModalOpen(true)}
         >
-          Track bus 2518
+          Track bus 2481
         </Button>
       </div>
       <div style={{ position: 'absolute', top: '55%', left: '20' }}>
@@ -78,7 +78,7 @@ function App() {
           color='primary'
           onClick={() => setBusAlarm()}
         >
-          Set alarm for bus 2518
+          Set alarm for bus 2481
         </Button>
       </div>
       {isBusTrackingModalOpen && (
@@ -90,16 +90,6 @@ function App() {
           }}
         />
       )}
-
-      {/* {isBusAlarmModalOpen && (
-        <BusAlarmModal
-          isOpen={isBusAlarmModalOpen}
-          busId={busId}
-          closeModal={() => {
-            setIsBusAlarmModelOpen(false);
-          }}
-        />
-      )} */}
     </div>
   );
 }
