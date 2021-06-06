@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Typography,
-  Modal,
-  CircularProgress,
-  IconButton,
-  makeStyles,
-} from '@material-ui/core';
+import { Typography, Modal, IconButton, makeStyles } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 export interface IBusTrackingModalProps {
@@ -64,25 +58,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//const SOCKET_URL = 'http://localhost:8080/real-time/location';
-
 const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   isOpen,
   closeModal,
   busId,
 }) => {
   const classes = useStyles();
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [messages, setMessages] = useState<IMessageData[]>([]);
 
   let eventSource: EventSource | undefined = undefined;
   const [listening, setListening] = useState(false);
   const [data, setData] = useState<string[]>([]);
 
-  console.log(data);
   useEffect(() => {
     if (!listening) {
-      eventSource = new EventSource(`http://localhost:8080/time?id=${busId}`);
+      eventSource = new EventSource(
+        `http://localhost:8080/location?id=${busId}`
+      );
 
       eventSource.onopen = (event) => {
         console.log('connection opened');
@@ -94,7 +85,6 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
       };
 
       eventSource.onerror = (event: any) => {
-        console.log(event);
         if (eventSource && event.target) {
           console.log(event.target.readyState);
           if (event.target.readyState === EventSource.CLOSED) {

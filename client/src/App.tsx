@@ -4,6 +4,7 @@ import { Map } from './Map/Map';
 import { HistoricalTable } from 'Table/HistoricalTable';
 import { Button } from '@material-ui/core';
 import { BusTrackingModal } from 'Modal/BusTrackingModal';
+import { BusAlarmModal } from 'Modal/BusAlarmModal';
 
 const places = [
   { latitude: 41.1675503, longitude: -8.687209 },
@@ -22,6 +23,10 @@ function App() {
   const [isBusTrackingModalOpen, setIsBusTrackingModalOpen] = useState<boolean>(
     false
   );
+
+  const [isBusAlarmModalOpen, setIsBusAlarmModelOpen] = useState<boolean>(
+    false
+  );
   // const [currentPosition, setCurrentPosition] = useState<any>({});
 
   // useEffect(() => {
@@ -38,6 +43,13 @@ function App() {
 
   // console.log(currentPosition);
 
+  //-8.610423,41.14931 lat long
+  const setBusAlarm = async () => {
+    const response = await fetch(
+      `http://localhost:8082/current-location?id=${busId}&latLong=-8.610423,41.14931`
+    );
+    console.log(response);
+  };
   return (
     <div className='App' style={{ flexDirection: 'column' }}>
       <Map markers={places} />
@@ -60,6 +72,15 @@ function App() {
           Track bus 2518
         </Button>
       </div>
+      <div style={{ position: 'absolute', top: '55%', left: '20' }}>
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => setBusAlarm()}
+        >
+          Set alarm for bus 2518
+        </Button>
+      </div>
       {isBusTrackingModalOpen && (
         <BusTrackingModal
           isOpen={isBusTrackingModalOpen}
@@ -69,6 +90,16 @@ function App() {
           }}
         />
       )}
+
+      {/* {isBusAlarmModalOpen && (
+        <BusAlarmModal
+          isOpen={isBusAlarmModalOpen}
+          busId={busId}
+          closeModal={() => {
+            setIsBusAlarmModelOpen(false);
+          }}
+        />
+      )} */}
     </div>
   );
 }

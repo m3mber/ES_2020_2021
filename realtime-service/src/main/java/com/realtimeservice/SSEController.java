@@ -10,8 +10,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -35,9 +33,9 @@ public class SSEController {
         }));
     }
 
-    @GetMapping("/time")
+    @GetMapping("/location")
     @CrossOrigin
-    public SseEmitter streamDateTime(@RequestParam String id) {
+    public SseEmitter streamRealTimeLocation(@RequestParam String id) {
 
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 
@@ -50,21 +48,19 @@ public class SSEController {
             sseEmitter.complete();
         });
         executor.execute(() -> {
-        while(true){
-               try {
-                   if (kafkaConsumer.dataBusInfo != null && kafkaConsumer.dataBusInfo.getNode_id().equals(id)) {
-                       String latLong = kafkaConsumer.dataBusInfo.getLat() + "," + kafkaConsumer.dataBusInfo.getLon();
-                       sseEmitter.send(latLong);
-                   }
-                   /**else {
-                       sseEmitter.send(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
-                   }**/
-                   sleep(1, sseEmitter);
-               } catch (IOException e) {
-                   e.printStackTrace();
-                   sseEmitter.completeWithError(e);
-               }
-           }
+            while (true) {
+                try {
+                    if (kafkaConsumer.dataBusInfo != null && kafkaConsumer.dataBusInfo.getNode_id().equals(id)) {
+                        String latLong = kafkaConsumer.dataBusInfo.getLat() + "," + kafkaConsumer.dataBusInfo.getLon();
+                        sseEmitter.send(latLong);
+                    }
+
+                    sleep(1, sseEmitter);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sseEmitter.completeWithError(e);
+                }
+            }
 
         });
 
