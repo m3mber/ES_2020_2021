@@ -4,6 +4,7 @@ import { Map } from './Map/Map';
 import { HistoricalTable } from 'Table/HistoricalTable';
 import { Button } from '@material-ui/core';
 import { BusTrackingModal } from 'Modal/BusTrackingModal';
+import { IFeedback, Feedback } from 'Feedback/Feedback';
 
 const places = [
   { latitude: 41.1675503, longitude: -8.687209 },
@@ -23,9 +24,10 @@ function App() {
     false
   );
 
-  const [isBusAlarmModalOpen, setIsBusAlarmModelOpen] = useState<boolean>(
-    false
-  );
+  let eventSource: EventSource | undefined = undefined;
+  const [listening, setListening] = useState(false);
+  const [data, setData] = useState<string[]>([]);
+  const [feedbackData, setFeedbackData] = useState<IFeedback>();
   // const [currentPosition, setCurrentPosition] = useState<any>({});
 
   // useEffect(() => {
@@ -49,6 +51,44 @@ function App() {
     );
     console.log(response);
   };
+
+  // useEffect(() => {
+  //   if (!listening) {
+  //     eventSource = new EventSource(
+  //       `http://localhost:8080/location?id=${busId}`
+  //     );
+
+  //     eventSource.onopen = (event) => {
+  //       console.log('connection opened');
+  //     };
+
+  //     eventSource.onmessage = (event) => {
+  //       console.log('result', event.data);
+  //       setData(event.data);
+  // setFeedbackData({
+  //   open: true,
+  //   severity: 'success',
+  //   message: event.data,
+  // });
+  //     };
+
+  //     eventSource.onerror = (event: any) => {
+  //       if (eventSource && event.target) {
+  //         console.log(event.target.readyState);
+  //         if (event.target.readyState === EventSource.CLOSED) {
+  //           console.log('eventsource closed (' + event.target.readyState + ')');
+  //         }
+  //         eventSource.close();
+  //       }
+  //     };
+
+  //     setListening(true);
+  //   }
+  //   return () => {
+  //     eventSource && eventSource.close();
+  //     console.log('eventsource closed');
+  //   };
+  // }, []);
 
   return (
     <div className='App' style={{ flexDirection: 'column' }}>
@@ -87,6 +127,21 @@ function App() {
           busId={busId}
           closeModal={() => {
             setIsBusTrackingModalOpen(false);
+            setFeedbackData({
+              open: true,
+              severity: 'success',
+              message: 'event.data',
+            });
+          }}
+        />
+      )}
+      {feedbackData?.open && feedbackData?.message && feedbackData?.severity && (
+        <Feedback
+          open={feedbackData?.open}
+          message={feedbackData?.message}
+          severity={feedbackData?.severity}
+          onClose={() => {
+            setFeedbackData(undefined);
           }}
         />
       )}
