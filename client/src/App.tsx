@@ -11,7 +11,7 @@ const places = [
   { latitude: 41.154613, longitude: -8.613325 },
 ];
 
-const busId = '00000000-0000-0000-0000-000000002518';
+const busId = '00000000-0000-0000-0000-000000002481';
 
 function App() {
   // const { isLoaded, loadError } = useLoadScript({
@@ -69,7 +69,7 @@ function App() {
           color='primary'
           onClick={() => setIsBusTrackingModalOpen(true)}
         >
-          Track bus 2518
+          Track bus 2481
         </Button>
       </div>
       <div style={{ position: 'absolute', top: '55%', left: '20' }}>
@@ -78,7 +78,7 @@ function App() {
           color='primary'
           onClick={() => setBusAlarm()}
         >
-          Set alarm for bus 2518
+          Set alarm for bus 2481
         </Button>
       </div>
       {isBusTrackingModalOpen && (
