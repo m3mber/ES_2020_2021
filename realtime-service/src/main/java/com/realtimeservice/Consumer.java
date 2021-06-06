@@ -1,6 +1,5 @@
 package com.realtimeservice;
 
-
 import org.apache.kafka.clients.producer.Producer;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,9 +17,11 @@ import java.util.List;
 
 @Service
 public class Consumer {
-    /*public DataBusInfo dataBusInfo = new DataBusInfo(24582903, "00000000-0000-0000-0000-000000002518", 225, 24.53,
-            "-8.610583", "41.14898", 12, "2018-10-08 00:00:00.001", "2018-10-08 00:00:01.638819");*/
-
+    /*
+     * public DataBusInfo dataBusInfo = new DataBusInfo(24582903,
+     * "00000000-0000-0000-0000-000000002518", 225, 24.53, "-8.610583", "41.14898",
+     * 12, "2018-10-08 00:00:00.001", "2018-10-08 00:00:01.638819");
+     */
 
     private final Logger logger = LoggerFactory.getLogger(Producer.class);
 
@@ -29,7 +30,9 @@ public class Consumer {
     public DataBusInfo dataBusInfo = new DataBusInfo();
 
     public SSEController sseController = new SSEController();
-    public void Consumer() {}
+
+    public void Consumer() {
+    }
 
     @KafkaListener(topics = "ESP13_bus_data", groupId = "group_id")
     public void consume(String message) throws IOException {
@@ -43,8 +46,7 @@ public class Consumer {
         /* Getting JSON array */
         JSONArray dataBusArr = root.getJSONArray("data_bus");
 
-        for (int i = 0; i < dataBusArr.length(); i++)
-        {
+        for (int i = 0; i < dataBusArr.length(); i++) {
             JSONObject jsonDataBus = dataBusArr.getJSONObject(i);
 
             String lon = jsonDataBus.getString("lon");
@@ -56,39 +58,35 @@ public class Consumer {
             sseController.setLongitude(lon);
             sseController.setBusId(node_id);
 
-            /*___________________________________________________________________________*/
-            /*String location_id = jsonDataBus.getString("location_id");
-            String id = jsonDataBus.getString("id");
-            String head = jsonDataBus.getString("head");
-            String speed = jsonDataBus.getString("speed");
-            String ts = jsonDataBus.getString("ts");
-            String write_time = jsonDataBus.getString("write_time"); */
+            /*
+             * ___________________________________________________________________________
+             */
+            /*
+             * String location_id = jsonDataBus.getString("location_id"); String id =
+             * jsonDataBus.getString("id"); String head = jsonDataBus.getString("head");
+             * String speed = jsonDataBus.getString("speed"); String ts =
+             * jsonDataBus.getString("ts"); String write_time =
+             * jsonDataBus.getString("write_time");
+             */
 
             /* Populate DataBusInfo */
-            /*dataBus.setId(Long.parseLong(id));
-            dataBus.setNode_id(node_id);
-            dataBus.setLocation_id(Integer.parseInt(location_id));
-            dataBus.setHead(Double.parseDouble(head));
-            dataBus.setLon(lon);
-            dataBus.setLat(lat);
-            try {
-                dataBus.setSpeed(Integer.parseInt(speed));
-            } catch (Exception e) {
-                dataBus.setSpeed(Integer.parseInt("0"));
-            }
-            dataBus.setTs(ts);
-            dataBus.setWrite_time(write_time); */
+            /*
+             * dataBus.setId(Long.parseLong(id)); dataBus.setNode_id(node_id);
+             * dataBus.setLocation_id(Integer.parseInt(location_id));
+             * dataBus.setHead(Double.parseDouble(head)); dataBus.setLon(lon);
+             * dataBus.setLat(lat); try { dataBus.setSpeed(Integer.parseInt(speed)); } catch
+             * (Exception e) { dataBus.setSpeed(Integer.parseInt("0")); } dataBus.setTs(ts);
+             * dataBus.setWrite_time(write_time);
+             */
 
             /* Add populated bus to our collection */
-            //this.allBus.add(dataBus);
-
+            // this.allBus.add(dataBus);
 
         }
         logger.info(String.format("#### -> Consumed message -> %s", message));
     }
 
-    public List<DataBusInfo> getDataBusList()
-    {
+    public List<DataBusInfo> getDataBusList() {
         return this.allBus;
     }
 
