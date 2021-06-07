@@ -26,7 +26,6 @@ function App() {
 
   let eventSource: EventSource | undefined = undefined;
   const [listening, setListening] = useState(false);
-  const [data, setData] = useState<string[]>([]);
   const [feedbackData, setFeedbackData] = useState<IFeedback>();
   // const [currentPosition, setCurrentPosition] = useState<any>({});
 
@@ -52,43 +51,40 @@ function App() {
     console.log(response);
   };
 
-  // useEffect(() => {
-  //   if (!listening) {
-  //     eventSource = new EventSource(
-  //       `http://localhost:8080/location?id=${busId}`
-  //     );
+  useEffect(() => {
+    if (!listening) {
+      eventSource = new EventSource(`http://localhost:8080/alarm`);
 
-  //     eventSource.onopen = (event) => {
-  //       console.log('connection opened');
-  //     };
+      eventSource.onopen = (event) => {
+        console.log('connection opened');
+      };
 
-  //     eventSource.onmessage = (event) => {
-  //       console.log('result', event.data);
-  //       setData(event.data);
-  // setFeedbackData({
-  //   open: true,
-  //   severity: 'success',
-  //   message: event.data,
-  // });
-  //     };
+      eventSource.onmessage = (event) => {
+        console.log('result', event.data);
+        setFeedbackData({
+          open: true,
+          severity: 'warning',
+          message: event.data,
+        });
+      };
 
-  //     eventSource.onerror = (event: any) => {
-  //       if (eventSource && event.target) {
-  //         console.log(event.target.readyState);
-  //         if (event.target.readyState === EventSource.CLOSED) {
-  //           console.log('eventsource closed (' + event.target.readyState + ')');
-  //         }
-  //         eventSource.close();
-  //       }
-  //     };
+      eventSource.onerror = (event: any) => {
+        if (eventSource && event.target) {
+          console.log(event.target.readyState);
+          if (event.target.readyState === EventSource.CLOSED) {
+            console.log('eventsource closed (' + event.target.readyState + ')');
+          }
+          eventSource.close();
+        }
+      };
 
-  //     setListening(true);
-  //   }
-  //   return () => {
-  //     eventSource && eventSource.close();
-  //     console.log('eventsource closed');
-  //   };
-  // }, []);
+      setListening(true);
+    }
+    return () => {
+      eventSource && eventSource.close();
+      console.log('eventsource closed');
+    };
+  }, []);
 
   return (
     <div className='App' style={{ flexDirection: 'column' }}>

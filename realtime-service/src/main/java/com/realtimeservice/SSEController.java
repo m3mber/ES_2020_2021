@@ -104,6 +104,40 @@ public class SSEController {
         return sseEmitter;
     }
 
+    @GetMapping("/alarm")
+    @CrossOrigin
+    public SseEmitter pushAlarm() {
+
+        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+
+        sseEmitter.onCompletion(() -> LOGGER.info("SseEmitter is completed"));
+
+        sseEmitter.onTimeout(() -> LOGGER.info("SseEmitter is timed out"));
+
+        sseEmitter.onError((ex) -> {
+            LOGGER.info("SseEmitter got error:", ex);
+            sseEmitter.complete();
+        });
+        executor.execute(() -> {
+
+                try {
+                    if (this.alarm != null) {
+                        sseEmitter.send("Alarm: " + this.alarm);
+                    }
+
+                    sleep(1, sseEmitter);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sseEmitter.completeWithError(e);
+                }
+
+        });
+
+        LOGGER.info("Controller exits");
+        return sseEmitter;
+    }
+
 
 
     private void sleep(int seconds, SseEmitter sseEmitter) {
