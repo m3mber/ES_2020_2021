@@ -28,7 +28,7 @@ public class SSEController {
 
     /* Static bus id */
     /* todo: Dynamic bus id button */
-    private String static_bus_id = "00000000-0000-0000-0000-000000002518";
+    private String static_bus_id = "00000000-0000-0000-0000-000000002418";
 
     /*
      * __________________________________________________________________________________________
