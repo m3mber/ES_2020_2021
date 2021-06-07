@@ -68,7 +68,7 @@ public class KafkaConsumer
                 {
                     System.out.println("Bus is near from user location");
                     /* Sending message to Kafka Alarm topic if bus is near */
-                    sendAlarmMessage("Bus is near, " + lon + "and  Lat: " + lat);
+                    sendAlarmMessage("Bus is near, Lon: " + lon + " Lat: " + lat);
                 }
             }
 

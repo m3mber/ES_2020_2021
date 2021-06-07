@@ -25,6 +25,7 @@ public class SSEController {
     private static String lat;
     private static String lon;
     private static String bus_id;
+    private static String alarm;
 
     /* Static bus id */
     /* todo: Dynamic bus id button */
@@ -46,6 +47,11 @@ public class SSEController {
 
     public void setLongitude(String lon) {
         this.lon = lon;
+    }
+
+    public void setAlarm(String alarm)
+    {
+        this.alarm = alarm;
     }
 
     /*
@@ -97,6 +103,8 @@ public class SSEController {
         LOGGER.info("Controller exits");
         return sseEmitter;
     }
+
+
 
     private void sleep(int seconds, SseEmitter sseEmitter) {
         try {

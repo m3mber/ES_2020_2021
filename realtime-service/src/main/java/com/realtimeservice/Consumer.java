@@ -86,6 +86,13 @@ public class Consumer {
         logger.info(String.format("#### -> Consumed message -> %s", message));
     }
 
+
+    @KafkaListener(topics = "ESP13_distance_alarm", groupId = "group_id")
+    public void consume_alarm(String message)
+    {
+        System.out.println("Sending ALARM to controller: " + message);
+        sseController.setAlarm("ALARM: " + message);
+    }
     public List<DataBusInfo> getDataBusList() {
         return this.allBus;
     }
