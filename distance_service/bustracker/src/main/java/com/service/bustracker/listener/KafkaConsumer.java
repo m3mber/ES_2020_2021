@@ -72,7 +72,6 @@ public class KafkaConsumer
 
 
             /* Populate DataBusInfo
-
              * dataBus.setId(Long.parseLong(id)); dataBus.setNode_id(node_id);
              * dataBus.setLocation_id(Integer.parseInt(location_id));
              * dataBus.setHead(Double.parseDouble(head)); dataBus.setLon(lon);
@@ -80,7 +79,6 @@ public class KafkaConsumer
              * try { dataBus.setSpeed(Integer.parseInt(speed)); } catch (Exception e) {
              * dataBus.setSpeed(Integer.parseInt("0")); } dataBus.setTs(ts);
              * dataBus.setWrite_time(write_time);
-
              * allBus.add(dataBus); System.out.println("Adding to dataBus object");
              */
         }
