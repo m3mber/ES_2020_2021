@@ -25,6 +25,7 @@ public class SSEController {
     private static String lat;
     private static String lon;
     private static String bus_id;
+    private static String alarm = null;
 
     /* Static bus id */
     /* todo: Dynamic bus id button */
@@ -46,6 +47,11 @@ public class SSEController {
 
     public void setLongitude(String lon) {
         this.lon = lon;
+    }
+
+    public void setAlarm(String alarm)
+    {
+        this.alarm = alarm;
     }
 
     /*
@@ -97,6 +103,47 @@ public class SSEController {
         LOGGER.info("Controller exits");
         return sseEmitter;
     }
+
+    @GetMapping("/alarm")
+    @CrossOrigin
+    public SseEmitter pushAlarm() {
+
+        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+
+        sseEmitter.onCompletion(() -> LOGGER.info("SseEmitter is completed"));
+
+        sseEmitter.onTimeout(() -> LOGGER.info("SseEmitter is timed out"));
+
+        sseEmitter.onError((ex) -> {
+            LOGGER.info("SseEmitter got error:", ex);
+            sseEmitter.complete();
+
+        });
+        executor.execute(() -> {
+            while(true) {
+                try {
+                    System.out.println(">>> " + this.alarm);
+                    if (this.alarm != null) {
+                        System.out.println(">>> Sending alarm");
+                        sseEmitter.send("Alarm: " + this.alarm);
+                        break;
+                    }
+                    //sleep(1, sseEmitter);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sseEmitter.completeWithError(e);
+                }
+            }
+            sseEmitter.complete();
+
+        });
+
+        LOGGER.info("Controller exits");
+        return sseEmitter;
+    }
+
+
 
     private void sleep(int seconds, SseEmitter sseEmitter) {
         try {

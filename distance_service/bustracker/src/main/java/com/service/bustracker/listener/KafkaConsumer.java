@@ -1,6 +1,8 @@
 package com.service.bustracker.listener;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.service.bustracker.model.DataBusInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,13 +68,12 @@ public class KafkaConsumer
                 {
                     System.out.println("Bus is near from user location");
                     /* Sending message to Kafka Alarm topic if bus is near */
-                    sendAlarmMessage("Bus is near, " + lon + "and  Lat: " + lat);
+                    sendAlarmMessage("Bus is near, Lon: " + lon + " Lat: " + lat);
                 }
             }
 
 
             /* Populate DataBusInfo
-
              * dataBus.setId(Long.parseLong(id)); dataBus.setNode_id(node_id);
              * dataBus.setLocation_id(Integer.parseInt(location_id));
              * dataBus.setHead(Double.parseDouble(head)); dataBus.setLon(lon);
@@ -80,7 +81,6 @@ public class KafkaConsumer
              * try { dataBus.setSpeed(Integer.parseInt(speed)); } catch (Exception e) {
              * dataBus.setSpeed(Integer.parseInt("0")); } dataBus.setTs(ts);
              * dataBus.setWrite_time(write_time);
-
              * allBus.add(dataBus); System.out.println("Adding to dataBus object");
              */
         }
@@ -96,7 +96,7 @@ public class KafkaConsumer
 
         System.out.println("Distance " + dist + " meters");
 
-        if (dist < 1000 && distanceFlag == false)
+        if (dist < 3000 && distanceFlag == false)
         {
             distanceFlag = true;
             return true;
