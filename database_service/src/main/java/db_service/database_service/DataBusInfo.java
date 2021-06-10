@@ -1,31 +1,55 @@
 package db_service.database_service;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 public class DataBusInfo {
     @org.codehaus.jackson.annotate.JsonProperty("id")
+    @Id
+    @Column(name = "id")
     private long id;
+
+    @Column(name = "node_id")
     private String node_id;
+
+    @Column(name = "location_id")
     private int location_id;
+
+    @Column(name = "head")
     private double head;
-    private String lon;
-    private String lat;
+
+    @Column(name = "longitude")
+    private String longitude;
+
+    @Column(name = "latitude")
+    private String latitude;
+
+    @Column(name = "speed")
     private int speed;
-    private String ts;
+
+    @Column(name = "timestamp")
+    private String timestamp;
+
+    @Column(name = "writeTime")
     private String write_time;
 
-    public DataBusInfo(long id, String node_id, int location_id, double head, String lon, String lat, int speed,
-            String ts, String write_time) {
+
+    public DataBusInfo() {
+
+    }
+
+    public DataBusInfo(long id, String node_id, int location_id, double head, String longitude, String latitude, int speed, String timestamp, String write_time) {
         this.id = id;
         this.node_id = node_id;
         this.location_id = location_id;
         this.head = head;
-        this.lon = lon;
-        this.lat = lat;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.speed = speed;
-        this.ts = ts;
+        this.timestamp =timestamp;
         this.write_time = write_time;
-    }
-
-    public DataBusInfo() {
     }
 
     public long getId() {
@@ -44,11 +68,11 @@ public class DataBusInfo {
         this.node_id = node_id;
     }
 
-    public long getLocation_id() {
+    public int getLocation_id() {
         return location_id;
     }
 
-    public void setLocation_id(int location_id) {
+    public void getLocation_id(int location_id) {
         this.location_id = location_id;
     }
 
@@ -56,26 +80,23 @@ public class DataBusInfo {
         return head;
     }
 
-    public void setHead(double head) {
+    public void setHead(float head) {
         this.head = head;
     }
-
-    public String getLon() {
-        return lon;
+    public String isLongitude() {
+        return longitude;
     }
 
-    public void setLon(String lon) {
-        this.lon = lon;
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+    public String getLatitude() {
+        return latitude;
     }
 
-    public String getLat() {
-        return lat;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
     public int getSpeed() {
         return speed;
     }
@@ -84,19 +105,24 @@ public class DataBusInfo {
         this.speed = speed;
     }
 
-    public String getTs() {
-        return ts;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setTs(String ts) {
-        this.ts = ts;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
-
     public String getWrite_time() {
         return write_time;
     }
 
     public void setWrite_time(String write_time) {
         this.write_time = write_time;
+    }
+
+    @Override
+    public String toString() {
+        return "Bus [id=" + id + ", node_id=" + node_id + ", location_id=" + location_id + ", head=" + head  + ", longitude=" + longitude
+                + ", latitude=" + latitude + ", speed=" + speed + ", timestamp=" + timestamp + ", write_time=" + write_time +"]";
     }
 }

@@ -72,8 +72,8 @@ public class Consumer {
      public @ResponseBody String addNewBusData (@RequestParam String lon, @RequestParam String lat, @RequestParam String node_id) {
 
 		DataBusInfo b = new DataBusInfo();
-		b.setLon(lon);
-        b.setLat(lat);
+		b.setLongitude(lon);
+        b.setLatitude(lat);
         b.setNode_id(node_id);
 
         logger.info(String.format("####### -> DATABASEEEE -> %s ", dataBusRepository.findAll()));
