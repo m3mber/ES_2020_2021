@@ -31,7 +31,7 @@ public class Consumer {
     public void Consumer() {
     }
     
-    @KafkaListener(topics = "ESP13_bus_data", groupId = "group_id")
+    @KafkaListener(topics = "ESP13_bus_data", groupId = "es_p13DB")
     public void consumeMessage(String message) {
          /* JSON Format */
          String json_message = "{'data_bus' : " + message + "}";
@@ -44,7 +44,10 @@ public class Consumer {
  
          for (int i = 0; i < dataBusArr.length(); i++) {
              JSONObject jsonDataBus = dataBusArr.getJSONObject(i);
- 
+
+             // Remove if not needed
+             int id = jsonDataBus.getInt("id");
+
              String lon = jsonDataBus.getString("lon");
              String lat = jsonDataBus.getString("lat");
              String node_id = jsonDataBus.getString("node_id");
@@ -59,7 +62,7 @@ public class Consumer {
              BusController.setBusId(node_id);
              */
 
-             addNewBusData(lon, lat, node_id);
+             addNewBusData(id, lon, lat, node_id);
              
  
          }
@@ -69,9 +72,10 @@ public class Consumer {
     /**
 	 * Mysql persistence
 	 */
-     public @ResponseBody String addNewBusData (@RequestParam String lon, @RequestParam String lat, @RequestParam String node_id) {
+     public @ResponseBody String addNewBusData (@RequestParam int id, @RequestParam String lon, @RequestParam String lat, @RequestParam String node_id) {
 
 		DataBusInfo b = new DataBusInfo();
+		b.setId(id);
 		b.setLongitude(lon);
         b.setLatitude(lat);
         b.setNode_id(node_id);
