@@ -49,8 +49,7 @@ public class SSEController {
         this.lon = lon;
     }
 
-    public void setAlarm(String alarm)
-    {
+    public void setAlarm(String alarm) {
         this.alarm = alarm;
     }
 
@@ -120,25 +119,23 @@ public class SSEController {
         });
         executor.execute(() -> {
 
-                try {
-                    if (this.alarm != null) {
-                        sseEmitter.send("Alarm: " + this.alarm);
-                    }
-
-                    sleep(1, sseEmitter);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    sseEmitter.completeWithError(e);
+            try {
+                if (this.alarm != null) {
+                    sseEmitter.send("Alarm: " + this.alarm);
                 }
+
+                sleep(1, sseEmitter);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                sseEmitter.completeWithError(e);
+            }
 
         });
 
         LOGGER.info("Controller exits");
         return sseEmitter;
     }
-
-
 
     private void sleep(int seconds, SseEmitter sseEmitter) {
         try {

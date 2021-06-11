@@ -53,7 +53,7 @@ function App() {
 
   useEffect(() => {
     if (!listening) {
-      eventSource = new EventSource(`http://localhost:8080/alarm`);
+      eventSource = new EventSource('http://localhost:8080/alarm');
 
       eventSource.onopen = (event) => {
         console.log('connection opened');
@@ -123,11 +123,6 @@ function App() {
           busId={busId}
           closeModal={() => {
             setIsBusTrackingModalOpen(false);
-            setFeedbackData({
-              open: true,
-              severity: 'success',
-              message: 'event.data',
-            });
           }}
         />
       )}

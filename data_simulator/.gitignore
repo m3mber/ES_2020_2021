@@ -1,1 +1,4 @@
 node_data.csv
+node_modules
+build
+.env
