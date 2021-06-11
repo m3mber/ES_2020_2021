@@ -25,7 +25,7 @@ public class SSEController {
     private static String lat;
     private static String lon;
     private static String bus_id;
-    private static String alarm;
+    private static String alarm = null;
 
     /* Static bus id */
     /* todo: Dynamic bus id button */
@@ -116,20 +116,25 @@ public class SSEController {
         sseEmitter.onError((ex) -> {
             LOGGER.info("SseEmitter got error:", ex);
             sseEmitter.complete();
+
         });
         executor.execute(() -> {
+            while (true) {
+                try {
+                    System.out.println(">>> " + this.alarm);
+                    if (this.alarm != null) {
+                        System.out.println(">>> Sending alarm");
+                        sseEmitter.send("Alarm: " + this.alarm);
+                        break;
+                    }
+                    // sleep(1, sseEmitter);
 
-            try {
-                if (this.alarm != null) {
-                    sseEmitter.send("Alarm: " + this.alarm);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sseEmitter.completeWithError(e);
                 }
-
-                sleep(1, sseEmitter);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                sseEmitter.completeWithError(e);
             }
+            sseEmitter.complete();
 
         });
 

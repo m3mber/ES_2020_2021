@@ -96,7 +96,7 @@ public class KafkaConsumer
 
         System.out.println("Distance " + dist + " meters");
 
-        if (dist < 1000 && distanceFlag == false)
+        if (dist < 3000 && distanceFlag == false)
         {
             distanceFlag = true;
             return true;
