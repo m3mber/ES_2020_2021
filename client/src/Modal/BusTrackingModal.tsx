@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Modal, IconButton, makeStyles } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { Map } from '../Map/Map';
 
 export interface IBusTrackingModalProps {
   isOpen: boolean;
@@ -29,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
   modalDiv: {
     overflow: 'auto',
     backgroundColor: 'white',
-    width: '30%',
-    height: '30%',
+    width: '80%',
+    height: '80%',
     borderRadius: '10px',
     flexDirection: 'column',
     justifyContent: 'start',
@@ -39,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
   },
   exitButton: {
     position: 'absolute',
-    right: '33%',
-    top: '33%',
+    right: '7%',
+    top: '7%',
     backgroundColor: 'white',
     '&:hover': {
       background: 'white',
@@ -64,11 +65,22 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   busId,
 }) => {
   const classes = useStyles();
-
+  // let places = [
+  //   { latitude: 41.166058, longitude: -8.58294 },
+  //   { latitude: 41.17144, longitude: -8.594005 },
+  //   // { latitude: 41.172817, longitude: -8.607225 },
+  //   // { latitude: 41.154613, longitude: -8.607225 },
+  // ];
   let eventSource: EventSource | undefined = undefined;
   const [listening, setListening] = useState(false);
-  const [data, setData] = useState<string[]>([]);
+  const [places, setPlaces] = useState<
+    { latitude: number; longitude: number }[]
+  >([
+    // { latitude: 41.166058, longitude: -8.58294 },
+    // { latitude: 41.17144, longitude: -8.594005 },
+  ]);
 
+  console.log(places);
   useEffect(() => {
     if (!listening) {
       eventSource = new EventSource(
@@ -81,7 +93,15 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
 
       eventSource.onmessage = (event) => {
         console.log('result', event.data);
-        setData((old) => [...old, event.data]);
+        let message = event.data;
+        let messageArray = message.split(','); //on index 0 lat, on index 1 long
+        // setData((old) => [...old, message]);
+        console.log(messageArray);
+        console.log(places);
+        setPlaces((old) => [
+          ...old,
+          { latitude: +messageArray[0], longitude: +messageArray[1] },
+        ]);
       };
 
       eventSource.onerror = (event: any) => {
@@ -109,10 +129,11 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
       open={isOpen}
     >
       <div className={classes.modalDiv}>
-        {data.length > 0 &&
+        <Map markers={places} />
+        {/* {data.length > 0 &&
           data.map((item: any, index: number) => (
             <Typography key={index}>{item}</Typography>
-          ))}
+          ))} */}
         <IconButton
           className={classes.exitButton}
           onClick={() => {

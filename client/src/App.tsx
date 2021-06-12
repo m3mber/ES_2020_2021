@@ -6,12 +6,6 @@ import { Button } from '@material-ui/core';
 import { BusTrackingModal } from 'Modal/BusTrackingModal';
 import { IFeedback, Feedback } from 'Feedback/Feedback';
 
-const places = [
-  { latitude: 41.1675503, longitude: -8.687209 },
-  { latitude: 41.164945, longitude: -8.672024 },
-  { latitude: 41.154613, longitude: -8.613325 },
-];
-
 const busId = '00000000-0000-0000-0000-000000002481';
 
 function App() {
@@ -88,9 +82,8 @@ function App() {
 
   return (
     <div className='App' style={{ flexDirection: 'column' }}>
-      <Map markers={places} />
       {/*  {center={currentPosition}} */}
-      <div
+      {/* <div
         style={{
           padding: 50,
           width: '90%',
@@ -98,8 +91,8 @@ function App() {
         }}
       >
         <HistoricalTable />
-      </div>
-      <div style={{ position: 'absolute', top: '50%', left: '20' }}>
+      </div> */}
+      <div style={{ position: 'absolute', top: '10%', left: '20' }}>
         <Button
           variant='contained'
           color='primary'
@@ -108,7 +101,7 @@ function App() {
           Track bus 2481
         </Button>
       </div>
-      <div style={{ position: 'absolute', top: '55%', left: '20' }}>
+      <div style={{ position: 'absolute', top: '15%', left: '20' }}>
         <Button
           variant='contained'
           color='primary'

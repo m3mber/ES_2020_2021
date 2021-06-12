@@ -1,7 +1,14 @@
+/* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import DirectionsBusIcon from '@material-ui/icons/DirectionsBus';
+import BusIcon from 'assets/Aiga_bus.svg';
 
-const { compose, withProps, withStateHandlers } = require('recompose');
+const {
+  compose,
+  withProps,
+  withStateHandlers,
+  lifecycle,
+} = require('recompose');
 const {
   withScriptjs,
   withGoogleMap,
@@ -57,7 +64,7 @@ const Map = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
     center: { lat: 41.14961, lng: -8.61099 },
   }),
@@ -82,19 +89,24 @@ const Map = compose(
   }) =>
     props.center.lat && (
       <GoogleMap defaultZoom={12} defaultCenter={props.center} props>
-        <>
-          {props.markers.map((marker: any, index: number) => (
-            <Marker
-              key={index}
-              icon={DirectionsBusIcon}
-              position={{ lat: marker.latitude, lng: marker.longitude }}
-            />
-          ))}
+        {props.markers.length > 0 && (
+          <Marker
+            icon={{
+              url: BusIcon,
+              scaledSize: new window.google.maps.Size(20, 20),
+            }}
+            position={{
+              lat: props.markers[props.markers.length - 1]?.latitude,
+              lng: props.markers[props.markers.length - 1]?.longitude,
+            }}
+          />
+        )}
+        {props.markers.length > 1 && (
           <MapDirectionsRenderer
             places={props.markers}
             travelMode={google.maps.TravelMode.DRIVING}
           />
-        </>
+        )}
       </GoogleMap>
     )
 );
