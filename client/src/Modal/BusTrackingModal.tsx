@@ -82,6 +82,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
 
   console.log(places);
   useEffect(() => {
+    getBusStops();
     if (!listening) {
       eventSource = new EventSource(
         `http://localhost:8080/location?id=${busId}`
@@ -95,9 +96,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
         console.log('result', event.data);
         let message = event.data;
         let messageArray = message.split(','); //on index 0 lat, on index 1 long
-        // setData((old) => [...old, message]);
-        console.log(messageArray);
-        console.log(places);
+
         setPlaces((old) => [
           ...old,
           { latitude: +messageArray[0], longitude: +messageArray[1] },
@@ -121,6 +120,21 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
       console.log('eventsource closed');
     };
   }, []);
+
+  const getBusStops = async () => {
+    const databaseResponse = await fetch(
+      `https://localhost:8085/bus/locations?id=${busId}`
+    );
+    const body = await databaseResponse.json();
+    console.log(databaseResponse);
+    console.log(body);
+    for (let i = 0; i < body.length; i = i + 2) {
+      setPlaces((old) => [
+        ...old,
+        { latitude: body[i], longitude: body[i + 1] },
+      ]);
+    }
+  };
 
   return (
     <Modal

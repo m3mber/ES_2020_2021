@@ -37,6 +37,7 @@ function MapDirectionsRenderer(props: { places: any; travelMode: any }) {
     const destination = waypoints.pop().location;
 
     const directionsService = new google.maps.DirectionsService();
+
     directionsService.route(
       {
         origin: origin,
@@ -57,7 +58,9 @@ function MapDirectionsRenderer(props: { places: any; travelMode: any }) {
   if (error) {
     return <h1>{error?.status}</h1>;
   }
-  return directions && <DirectionsRenderer directions={directions} />;
+  return (
+    directions && <DirectionsRenderer directions={directions} suppressMarkers />
+  );
 }
 
 const Map = compose(

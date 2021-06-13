@@ -5,15 +5,36 @@ import { HistoricalTable } from 'Table/HistoricalTable';
 import { Button } from '@material-ui/core';
 import { BusTrackingModal } from 'Modal/BusTrackingModal';
 import { IFeedback, Feedback } from 'Feedback/Feedback';
+import { makeStyles } from '@material-ui/core/styles';
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  SelectProps,
+} from '@material-ui/core';
 
 const busId = '00000000-0000-0000-0000-000000002481';
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    minWidth: 130,
+  },
+
+  inputFeedback: {
+    color: 'red',
+    textAlign: 'start',
+    fontSize: '13px',
+    fontWeight: 400,
+    marginTop: '3px',
+  },
+}));
 
 function App() {
   // const { isLoaded, loadError } = useLoadScript({
   //   googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY ? ,
   //   libraries,
   // });
-
+  const classes = useStyles();
   const [isBusTrackingModalOpen, setIsBusTrackingModalOpen] = useState<boolean>(
     false
   );
@@ -21,6 +42,17 @@ function App() {
   let eventSource: EventSource | undefined = undefined;
   const [listening, setListening] = useState(false);
   const [feedbackData, setFeedbackData] = useState<IFeedback>();
+
+  const [busIds, setBusIds] = useState<any[]>([]);
+  const [currentBusId, setCurrentBusId] = useState<any>();
+  useEffect(() => {
+    fetch('https://localhost:8085/bus/ids')
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        setBusIds(result);
+      });
+  }, []);
   // const [currentPosition, setCurrentPosition] = useState<any>({});
 
   // useEffect(() => {
@@ -40,7 +72,7 @@ function App() {
   //-8.610423,41.14931 lat long
   const setBusAlarm = async () => {
     const response = await fetch(
-      `http://localhost:8082/current-location?id=${busId}&latLong=-8.610423,41.14931`
+      `http://localhost:8082/current-location?id=${currentBusId}&latLong=-8.610423,41.14931`
     );
     console.log(response);
   };
@@ -92,13 +124,30 @@ function App() {
       >
         <HistoricalTable />
       </div> */}
+      <FormControl style={{ width: 150 }}>
+        <InputLabel>Bus ids</InputLabel>
+        <Select
+          native
+          value={currentBusId || ''}
+          onChange={(event: any) => {
+            setCurrentBusId(event.target.value);
+          }}
+        >
+          <option aria-label='None' value='' />
+          {busIds.map((item: any, index: number) => (
+            <option key={index} value={item}>
+              {item}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
       <div style={{ position: 'absolute', top: '10%', left: '20' }}>
         <Button
           variant='contained'
           color='primary'
           onClick={() => setIsBusTrackingModalOpen(true)}
         >
-          Track bus 2481
+          Track bus
         </Button>
       </div>
       <div style={{ position: 'absolute', top: '15%', left: '20' }}>
@@ -107,13 +156,13 @@ function App() {
           color='primary'
           onClick={() => setBusAlarm()}
         >
-          Set alarm for bus 2481
+          Set alarm for bus
         </Button>
       </div>
       {isBusTrackingModalOpen && (
         <BusTrackingModal
           isOpen={isBusTrackingModalOpen}
-          busId={busId}
+          busId={currentBusId}
           closeModal={() => {
             setIsBusTrackingModalOpen(false);
           }}
