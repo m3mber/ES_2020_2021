@@ -9,9 +9,9 @@ public class DataBusInfo
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
-    private String node_id;
+    private String nodeId;
 
-    private int location_id;
+    private int locationId;
 
     private double head;
 
@@ -23,7 +23,7 @@ public class DataBusInfo
 
     private String ts;
 
-    private String write_time;
+    private String writeTime;
 
 
     public Integer getId() {
@@ -34,20 +34,20 @@ public class DataBusInfo
         this.id = id;
     }
 
-    public String getNode_id() {
-        return node_id;
+    public String getNodeId() {
+        return nodeId;
     }
 
-    public void setNode_id(String node_id) {
-        this.node_id = node_id;
+    public void setNodeId(String node_id) {
+        this.nodeId = node_id;
     }
 
     public int getLocation_id() {
-        return location_id;
+        return locationId;
     }
 
-    public void setLocation_id(int location_id) {
-        this.location_id = location_id;
+    public void setLocationId(int location_id) {
+        this.locationId = location_id;
     }
 
     public double getHead() {
@@ -91,10 +91,25 @@ public class DataBusInfo
     }
 
     public String getWrite_time() {
-        return write_time;
+        return writeTime;
     }
 
-    public void setWrite_time(String write_time) {
-        this.write_time = write_time;
+    public void setWriteTime(String write_time) {
+        this.writeTime = write_time;
+    }
+
+    @Override
+    public String toString() {
+        return "DataBusInfo{" +
+                "id=" + id +
+                ", nodeId='" + nodeId + '\'' +
+                ", locationId=" + locationId +
+                ", head=" + head +
+                ", lon='" + lon + '\'' +
+                ", lat='" + lat + '\'' +
+                ", speed=" + speed +
+                ", ts='" + ts + '\'' +
+                ", writeTime='" + writeTime + '\'' +
+                '}';
     }
 }
