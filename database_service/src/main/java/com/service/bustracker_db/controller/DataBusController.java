@@ -3,21 +3,29 @@ package com.service.bustracker_db.controller;
 import com.service.bustracker_db.model.DataBusInfo;
 import com.service.bustracker_db.repository.DataBusRepository;
 import com.service.bustracker_db.service.DataBusService;
+import org.apache.kafka.clients.producer.Producer;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/bus")
 public class DataBusController
 {
     @Autowired
     private DataBusService dataBusService;
+
+    private final Logger logger = LoggerFactory.getLogger(Producer.class);
+
 
     /**
      * Consume data from kafka Topic
@@ -53,7 +61,7 @@ public class DataBusController
         //int speed = Integer.parseInt(jsonDataBus.getString("speed"));
         String ts = jsonDataBus.getString("ts");
         String write_time = jsonDataBus.getString("write_time");
-
+        logger.info(String.format("#### -> Getting bus data"));
         /* todo: change speed */
         dataBusService.addBusData(id,node_id,location_id,head,lon,lat,0,ts,write_time );
         //getLatitudeAndLongitude("00000000-0000-0000-0000-000000002481");
@@ -67,9 +75,13 @@ public class DataBusController
     *
     * List returns   [ lat, lon ]
     * for example -> [41.166058, -8.58294, 41.17144, -8.594005, 41.172817, -8.607225] */
-    public void getLatitudeAndLongitude(String nodeId)
+
+    @GetMapping("/locations")
+    @CrossOrigin
+    public List<String> getLatitudeAndLongitude(@RequestParam String nodeId)
     {
         List<String> latAndLon = dataBusService.getLatitudeAndLongitude(nodeId);
+        return latAndLon;
         //System.out.println(latAndLon.toString());
     }
 
@@ -77,9 +89,12 @@ public class DataBusController
     /** This function returns all bus ids to present on the dropdown menu
      *
      * */
-    public void getAllBusIds()
+    @GetMapping("/ids")
+    @CrossOrigin
+    public List<String> getAllBusIds()
     {
         List<String> busIds = dataBusService.getAllBusIds();
+        return busIds;
         //System.out.println(busIds.toString());
     }
 }
