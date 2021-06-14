@@ -122,7 +122,7 @@ public class SSEController {
         executor.execute(() -> {
             while (true) {
                 try {
-                    System.out.println(">>> " + this.alarm);
+                    //System.out.println(">>> " + this.alarm);
                     if (this.alarm != null) {
                         System.out.println(">>> Sending alarm");
                         sseEmitter.send("Alarm: " + this.alarm);

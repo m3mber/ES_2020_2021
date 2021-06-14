@@ -99,7 +99,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
 
         setPlaces((old) => [
           ...old,
-          { latitude: +messageArray[0], longitude: +messageArray[1] },
+          { latitude: parseFloat(messageArray[0]), longitude: parseFloat(messageArray[1]) },
         ]);
       };
 
@@ -123,15 +123,16 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
 
   const getBusStops = async () => {
     const databaseResponse = await fetch(
-      `https://localhost:8085/bus/locations?id=${busId}`
+      `http://localhost:8084/bus/locations?busId=${busId}`
     );
     const body = await databaseResponse.json();
+    console.log("Reponse from bus/locations");
     console.log(databaseResponse);
     console.log(body);
     for (let i = 0; i < body.length; i = i + 2) {
       setPlaces((old) => [
         ...old,
-        { latitude: body[i], longitude: body[i + 1] },
+        { latitude: parseFloat(body[i]), longitude: parseFloat(body[i + 1]) },
       ]);
     }
   };

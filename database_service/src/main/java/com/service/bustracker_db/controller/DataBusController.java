@@ -78,11 +78,13 @@ public class DataBusController
 
     @GetMapping("/locations")
     @CrossOrigin
-    public List<String> getLatitudeAndLongitude(@RequestParam String nodeId)
+    public List<String> getLatitudeAndLongitude(@RequestParam String busId)
     {
-        List<String> latAndLon = dataBusService.getLatitudeAndLongitude(nodeId);
+        System.out.println(">>>>" + busId);
+        List<String> latAndLon = dataBusService.getLatitudeAndLongitude(busId);
+        System.out.println(latAndLon.toString());
         return latAndLon;
-        //System.out.println(latAndLon.toString());
+
     }
 
 
@@ -94,7 +96,9 @@ public class DataBusController
     public List<String> getAllBusIds()
     {
         List<String> busIds = dataBusService.getAllBusIds();
-        return busIds;
         //System.out.println(busIds.toString());
+        logger.info(String.format("#### -> Returning all ids, success"));
+        return busIds;
+
     }
 }

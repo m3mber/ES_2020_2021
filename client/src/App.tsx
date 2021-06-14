@@ -46,7 +46,7 @@ function App() {
   const [busIds, setBusIds] = useState<any[]>([]);
   const [currentBusId, setCurrentBusId] = useState<any>();
   useEffect(() => {
-    fetch('https://localhost:8085/bus/ids')
+    fetch('http://localhost:8084/bus/ids')
       .then((res) => res.json())
       .then((result) => {
         console.log(result);
