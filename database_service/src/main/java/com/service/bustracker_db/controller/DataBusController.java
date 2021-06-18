@@ -44,7 +44,7 @@ public class DataBusController
     {
         /* JSON Format */
         String json_message = "{'data_bus' : " + message + "}";
-
+        System.out.println(message);
         /* Set the string message to object */
         JSONObject root = new JSONObject(json_message);
 
@@ -63,7 +63,7 @@ public class DataBusController
         String write_time = jsonDataBus.getString("write_time");
         logger.info(String.format("#### -> Getting bus data"));
         /* todo: change speed */
-        dataBusService.addBusData(id,node_id,location_id,head,lon,lat,0,ts,write_time );
+        dataBusService.addBusData(id,node_id,location_id,head,lon,lat,0,ts,write_time);
         //getLatitudeAndLongitude("00000000-0000-0000-0000-000000002481");
         //getAllBusIds();
     }

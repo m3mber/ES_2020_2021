@@ -99,7 +99,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
 
         setPlaces((old) => [
           ...old,
-          { latitude: parseFloat(messageArray[0]), longitude: parseFloat(messageArray[1]) },
+          { latitude: +(messageArray[0]), longitude: parseFloat(messageArray[1]) },
         ]);
       };
 
