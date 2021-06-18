@@ -66,7 +66,7 @@ public class DatabaseSteps extends DatabaseServiceApplicationTests {
     /*
      * Scenario 1 Bus insert with id = should exist in table
      */
-    @Given("Received kafka topic with id = \"ESP13_bus_data\"")
+    @Given("Received kafka topic with id = \"ESP13_bus_dataTest\"")
     public void receivedKafkaTopic() throws InterruptedException {
         KafkaConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
         actualAnswer = KafkaConsumer.getPayload();
@@ -87,7 +87,7 @@ public class DatabaseSteps extends DatabaseServiceApplicationTests {
     /*
      * The bus data has no latitude or longitude
      */
-    @Given("Bus with id {int} should exist in table")
+    @Given("Received kafka topic with id = \"ESP13_bus_dataTest\"")
     public void receivedKafkaTopic2(int busID) throws InterruptedException {
         KafkaConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
         actualAnswer = KafkaConsumer.getPayload();
@@ -101,7 +101,7 @@ public class DatabaseSteps extends DatabaseServiceApplicationTests {
 
     }
 
-    @Then("It should tell me \"Bus is on table\"")
+    @Then("Bus with ID = {int} should not be added")
     public void cannotBeInserted(int id) {
         List<DataBusInfo> list = (List<DataBusInfo>) dataBusRepository.findDataBusInfoById(busIDTest);
         busIDTest = id;
