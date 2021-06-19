@@ -22,10 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
-@ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@CucumberContextConfiguration
+@ContextConfiguration
+@DirtiesContext
 class DatabaseServiceApplicationTests {
 
     @Autowired
@@ -43,13 +44,14 @@ class DatabaseServiceApplicationTests {
         System.out.println("Controller exists");
         assertNotNull(dataBusController);
     }
-
+    /*
     @Test
     void getStatusDB() throws Exception {
         System.out.println("Checking if DB is up");
-        this.mockMvc.perform(get("192.168.160.18:3306/es13_db")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("http://192.168.160.18:3306/es13_db")).andDo(print()).andExpect(status().isOk());
 
     }
+     */
     @Test
     void emptyBusList() throws Exception{
         System.out.println("Check if bus list is empty");

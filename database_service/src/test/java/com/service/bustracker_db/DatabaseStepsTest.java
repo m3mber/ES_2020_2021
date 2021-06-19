@@ -16,28 +16,34 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-@CucumberOptions(features = "src/test/resources/",plugin = {"pretty"}, publish = true)
+@CucumberOptions(features = "src/test/resources/",
+        plugin = {"pretty", "html:target/cucumber/bagbasics"},
+        extraGlue = "io.tpd.springbootcucumber.bagcommons")
 @RunWith(Cucumber.class)
-public class DatabaseSteps extends DatabaseServiceApplicationTests {
+public class DatabaseStepsTest extends DatabaseServiceApplicationTests {
 
-    @Autowired
     private DataBusInfo dataBusInfo;
+
     private String longTest;
     private String latTest;
-    @Autowired
+
     private DataBusRepository dataBusRepository;
     private String actualAnswer;
     private int busIDTest;
+    private String auxBusID;
+    private List<String> latLongValues = new ArrayList<>();
 
     @Autowired
     private DataBusService dataBusService;
     @Autowired
     private KafkaConsumer KafkaConsumer;
-
+    @Autowired
+    private DataBusController dataBusController;
 
     /*
         @Value("${test.topic}")
@@ -84,9 +90,11 @@ public class DatabaseSteps extends DatabaseServiceApplicationTests {
         List<DataBusInfo> list = (List<DataBusInfo>) dataBusRepository.findDataBusInfoById(busIDTest);
         assertTrue(list.size() != 0);
     }
+
     /*
-     * The bus data has no latitude or longitude
+     * Scenario 2: The bus data has no latitude or longitude
      */
+
     @Given("Received kafka topic with id = \"ESP13_bus_dataTest\"")
     public void receivedKafkaTopic2(int busID) throws InterruptedException {
         KafkaConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
@@ -103,10 +111,28 @@ public class DatabaseSteps extends DatabaseServiceApplicationTests {
 
     @Then("Bus with ID = {int} should not be added")
     public void cannotBeInserted(int id) {
-        List<DataBusInfo> list = (List<DataBusInfo>) dataBusRepository.findDataBusInfoById(busIDTest);
+        List<DataBusInfo> list = dataBusRepository.findDataBusInfoById(busIDTest);
         busIDTest = id;
-        assertFalse(list.size() != 0);
+        assertTrue(list.size() == 0);
 
+    }
+    /*
+        Scenario 3: Getting Latitude and longitude values from DB
+     */
+    @Given("Trying to get longitude and latitude from bus ID = {int}")
+    public void receiveBusID(int id){
+        busIDTest=id;
+    }
+    @When("Searching for values in database")
+    public List<String> searchDBValues(){
+        dataBusController = new DataBusController();
+        auxBusID = Integer.toString(busIDTest);
+        List<String> latLongValues = dataBusController.getLatitudeAndLongitude(auxBusID);
+        return latLongValues;
+    }
+    @Then("It should return list with values")
+    public void checkIfReceived(){
+        assertFalse(latLongValues.isEmpty());
     }
 
 }
