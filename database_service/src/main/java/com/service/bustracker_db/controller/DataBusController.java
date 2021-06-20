@@ -61,15 +61,17 @@ public class DataBusController
         //int speed = Integer.parseInt(jsonDataBus.getString("speed"));
         String ts = jsonDataBus.getString("ts");
         String write_time = jsonDataBus.getString("write_time");
-        logger.info(String.format("#### -> Getting bus data"));
+        //logger.info(String.format("#### -> Getting bus data"));
         /* todo: change speed */
-        dataBusService.addBusData(id,node_id,location_id,head,lon,lat,0,ts,write_time );
+        dataBusService.addBusData(id,node_id,location_id,head,lon,lat,0,ts,write_time);
+
+        /*Methods static tests*/
         //getLatitudeAndLongitude("00000000-0000-0000-0000-000000002481");
         //getAllBusIds();
+        //dataBusService.getRoutes("00000000-0000-0000-0000-000000002481");
     }
 
     /* -------------------------------------------------------------------------------------------------------*/
-    /* todo: Change here to communicate with react */
 
     /** This function retrives a List with all previous coords of that bus id or null if no record found
     *
@@ -80,11 +82,9 @@ public class DataBusController
     @CrossOrigin
     public List<String> getLatitudeAndLongitude(@RequestParam String busId)
     {
-        System.out.println(">>>>" + busId);
         List<String> latAndLon = dataBusService.getLatitudeAndLongitude(busId);
-        System.out.println(latAndLon.toString());
+        logger.info(String.format("#### -> Returning latitude and longitude, success"));
         return latAndLon;
-
     }
 
 
@@ -99,6 +99,18 @@ public class DataBusController
         //System.out.println(busIds.toString());
         logger.info(String.format("#### -> Returning all ids, success"));
         return busIds;
+    }
 
+    /** This function returns route from a bus id
+     *
+     * */
+    @GetMapping("/routes")
+    @CrossOrigin
+    public List<String> getRoute(@RequestParam String busId)
+    {
+        List<String> busRoute = dataBusService.getRoutes(busId);
+        //System.out.println(busIds.toString());
+        logger.info(String.format("#### -> Returning route, success"));
+        return busRoute;
     }
 }

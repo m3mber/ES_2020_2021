@@ -87,6 +87,7 @@ const Map = compose(
     onToggleOpen: any;
     isOpen: any;
     markers: any;
+    currentPosition: any;
   }) =>
     props.center.lat && (
       <GoogleMap defaultZoom={12} defaultCenter={props.center} props>
@@ -97,8 +98,8 @@ const Map = compose(
               scaledSize: new window.google.maps.Size(20, 20),
             }}
             position={{
-              lat: props.markers[props.markers.length - 1]?.latitude,
-              lng: props.markers[props.markers.length - 1]?.longitude,
+              lat: props.currentPosition?.latitude,
+              lng: props.currentPosition?.longitude,
             }}
           />
         )}
