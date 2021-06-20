@@ -86,7 +86,7 @@ public class SSEController {
             while (true) {
 
                 try {
-                    if (this.lat != null && this.lon != null && this.bus_id.equals(static_bus_id)) {
+                    if (this.lat != null && this.lon != null && this.bus_id.equals(id)) {
                         sseEmitter.send( this.lat +
                                 "," + this.lon);
                     }

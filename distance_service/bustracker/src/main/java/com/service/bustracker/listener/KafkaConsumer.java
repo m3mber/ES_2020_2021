@@ -3,6 +3,7 @@ package com.service.bustracker.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.service.bustracker.controllers.LocationController;
 import com.service.bustracker.model.DataBusInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,12 +21,13 @@ import java.util.List;
  * away.
  */
 @Service
-public class KafkaConsumer
-{
+public class KafkaConsumer {
 
     private List<DataBusInfo> allBus = new ArrayList<DataBusInfo>();
 
     private boolean distanceFlag = false;
+
+    private LocationController locationController = new LocationController();
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
@@ -44,8 +46,7 @@ public class KafkaConsumer
         /* Getting JSON array */
         JSONArray dataBusArr = root.getJSONArray("data_bus");
 
-        for (int i = 0; i < dataBusArr.length(); i++)
-        {
+        for (int i = 0; i < dataBusArr.length(); i++) {
             /* Retrieving JSON Data */
             JSONObject jsonDataBus = dataBusArr.getJSONObject(i);
             DataBusInfo dataBus = new DataBusInfo();
@@ -60,34 +61,29 @@ public class KafkaConsumer
             String ts = jsonDataBus.getString("ts");
             String write_time = jsonDataBus.getString("write_time");
 
-
             /* todo: this bus id needs to be dynamic */
-            if (node_id.equals("00000000-0000-0000-0000-000000002481"))
-            {
-                if (calculateDistance(Double.parseDouble(lat), Double.parseDouble(lon)))
-                {
+            if (node_id.equals(locationController.getId())) {
+                if (calculateDistance(Double.parseDouble(lat), Double.parseDouble(lon))) {
                     System.out.println("Bus is near from user location");
                     /* Sending message to Kafka Alarm topic if bus is near */
                     sendAlarmMessage("Bus is near, Lon: " + lon + " Lat: " + lat);
                 }
             }
 
-
-            /* Populate DataBusInfo
-             * dataBus.setId(Long.parseLong(id)); dataBus.setNode_id(node_id);
+            /*
+             * Populate DataBusInfo dataBus.setId(Long.parseLong(id));
+             * dataBus.setNode_id(node_id);
              * dataBus.setLocation_id(Integer.parseInt(location_id));
              * dataBus.setHead(Double.parseDouble(head)); dataBus.setLon(lon);
-             * dataBus.setLat(lat);
-             * try { dataBus.setSpeed(Integer.parseInt(speed)); } catch (Exception e) {
-             * dataBus.setSpeed(Integer.parseInt("0")); } dataBus.setTs(ts);
-             * dataBus.setWrite_time(write_time);
-             * allBus.add(dataBus); System.out.println("Adding to dataBus object");
+             * dataBus.setLat(lat); try { dataBus.setSpeed(Integer.parseInt(speed)); } catch
+             * (Exception e) { dataBus.setSpeed(Integer.parseInt("0")); } dataBus.setTs(ts);
+             * dataBus.setWrite_time(write_time); allBus.add(dataBus);
+             * System.out.println("Adding to dataBus object");
              */
         }
     }
 
-    private boolean calculateDistance(double lat2, double long2)
-    {
+    private boolean calculateDistance(double lat2, double long2) {
         /* This is a static value */
         Double lat1 = 41.18038089795866;
         Double long1 = -8.622097932210133;
@@ -96,8 +92,7 @@ public class KafkaConsumer
 
         System.out.println("Distance " + dist + " meters");
 
-        if (dist < 3000 && distanceFlag == false)
-        {
+        if (dist < 3000 && distanceFlag == false) {
             distanceFlag = true;
             return true;
         }
@@ -110,9 +105,7 @@ public class KafkaConsumer
         return false;
     }
 
-
-    private void sendAlarmMessage(String message)
-    {
+    private void sendAlarmMessage(String message) {
         System.out.println("Producing message to Alarm topic ESP13_distance_alarm");
         kafkaTemplate.send("ESP13_distance_alarm", message);
     }

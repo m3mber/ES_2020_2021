@@ -58,9 +58,7 @@ function MapDirectionsRenderer(props: { places: any; travelMode: any }) {
   if (error) {
     return <h1>{error?.status}</h1>;
   }
-  return (
-    directions && <DirectionsRenderer directions={directions} suppressMarkers />
-  );
+  return directions && <DirectionsRenderer directions={directions} />;
 }
 
 const Map = compose(
