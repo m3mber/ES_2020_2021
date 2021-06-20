@@ -2,8 +2,13 @@ package com.service.bustracker_db.service;
 
 import com.service.bustracker_db.model.DataBusInfo;
 import com.service.bustracker_db.model.DataBusNodeId;
+import com.service.bustracker_db.model.DataBusRoute;
 import com.service.bustracker_db.repository.DataBusNodeIdRepository;
 import com.service.bustracker_db.repository.DataBusRepository;
+import com.service.bustracker_db.repository.DataBusRouteRepository;
+import org.apache.kafka.clients.producer.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +26,17 @@ public class DataBusService
     @Autowired
     private DataBusNodeIdRepository dataBusNodeIdRepository;
 
+    @Autowired
+    private DataBusRouteRepository dataBusRouteRepository;
+
+
     private List<DataBusInfo> dataBusInfoList;
 
     private List<DataBusNodeId> dataBusNodeIds;
 
+    private List<DataBusRoute> dataBusRoutes;
+
+    private final Logger logger = LoggerFactory.getLogger(Producer.class);
 
     public void addBusData(Integer id, String node_id, int location_id, double head, String lon, String lat, int speed,
                            String ts, String write_time )
@@ -42,8 +54,9 @@ public class DataBusService
         dataBusInfo.setWriteTime(write_time);
 
         /* Used to save on database, comment if you dont want to save */
+
         //dataBusRepository.save(dataBusInfo);
-        //System.out.println("Added on db");
+        logger.info(String.format("#### -> Bus data saved on database"));
 
     }
 
@@ -57,7 +70,7 @@ public class DataBusService
             dataBusLatAndLon.add(d.getLat());
             dataBusLatAndLon.add(d.getLon());
         }
-
+        logger.info(String.format("#### -> Getting latitude and longitude"));
         return dataBusLatAndLon;
     }
 
@@ -70,19 +83,37 @@ public class DataBusService
         {
             busIds.add(d.getNodeId());
         }
-
+        logger.info(String.format("#### -> Getting all bus ids"));
         return busIds;
     }
 
-
-    /* Just made to Add ids to database*/
-/*  public void addIds(List<String> list)
+    public List<String> getRoutes(String nodeId)
     {
-        for (String s : list) {
-            DataBusNodeId busIds = new DataBusNodeId();
-            busIds.setNodeId(s);
-            dataBusNodeIdRepository.save(busIds);
-            System.out.println("Saving..." + s);
+        dataBusRoutes = dataBusRouteRepository.findDataBusRouteByNodeId(nodeId);
+        List<String> busRoute = new ArrayList<>();
+
+        for (DataBusRoute d : dataBusRoutes)
+        {
+            busRoute.add(d.getLat());
+            busRoute.add(d.getLon());
         }
-    } */
+        logger.info(String.format("#### -> Getting all routes for specific bus id"));
+        return busRoute;
+    }
+
+
+    /* Just made to Add routes on database*/
+    public void addRoutes(Integer id, String node_id, int location_id, double head, String lon, String lat )
+    {
+        DataBusRoute busRoute = new DataBusRoute();
+        busRoute.setId(id);
+        busRoute.setNodeId(node_id);
+        busRoute.setLocationId(location_id);
+        busRoute.setHead(head);
+        busRoute.setLon(lon);
+        busRoute.setLat(lat);
+
+        logger.info(String.format("#### -> Saving routes on db..."));
+        dataBusRouteRepository.save(busRoute);
+    }
 }
