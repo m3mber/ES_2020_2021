@@ -83,7 +83,7 @@ public class KafkaConsumer {
         }
     }
 
-    private boolean calculateDistance(double lat2, double long2) {
+    public boolean calculateDistance(double lat2, double long2) {
         /* This is a static value */
         Double lat1 = 41.18038089795866;
         Double long1 = -8.622097932210133;
