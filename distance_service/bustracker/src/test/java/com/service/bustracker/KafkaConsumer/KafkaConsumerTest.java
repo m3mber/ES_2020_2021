@@ -1,10 +1,14 @@
 package com.service.bustracker.KafkaConsumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import com.service.bustracker.model.DataBusInfo;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -14,13 +18,9 @@ public class KafkaConsumerTest {
 
     private CountDownLatch latch = new CountDownLatch(1);
     private String payload = null;
-
-    @KafkaListener(topics = "ESP13_bus_distTest", groupId="groupTest")
-    public void receive(String consumerRecord) {
-        LOGGER.info("received payload='{}'", consumerRecord.toString());
-        setPayload(consumerRecord.toString());
-        latch.countDown();
-    }
+    
+ 
+   
 
     private void setPayload(String toString) {
         this.payload=payload;

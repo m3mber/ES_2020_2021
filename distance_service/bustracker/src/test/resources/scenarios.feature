@@ -1,8 +1,9 @@
 Feature: distanceTest
 
-    Scenario: Get alarm when distance from location is less than 3000
-        Given Received kafka topic with id = "ESP13_bus_distTest"
-        When Distance is less than 3000
-        Then Alarm is produced
+    Scenario: Checking if a certain location ("41.18038089795863" and "-8.622097932210131") is close to the desired one
+        Given Location ("41.18038089795863" and "-8.622097932210131")
+        When Location is less than 3000
+        Then Alarm is produced 
 
+        
     
