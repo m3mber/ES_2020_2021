@@ -131,13 +131,14 @@ public class DatabaseStepsTest extends DatabaseServiceApplicationTests {
         return latLongValues;
     }
     @Then("It should return list with values that are expected (Lon = {string} lat = {string}")
-    public void checkIfReceived(){
-
+    public void checkIfReceived(String lon, String lat){
+        longTest = lon;
+        latTest = lat;
         assertFalse(latLongValues.isEmpty());
         String aux1 = latLongValues.get(0);
         String aux2 = latLongValues.get(1);
         assertEquals(longTest,aux1 );
-        assertEquals(longTest,aux2 );
+        assertEquals(latTest,aux2 );
     }
 
 }
