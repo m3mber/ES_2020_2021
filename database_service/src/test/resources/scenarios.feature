@@ -11,6 +11,6 @@ Feature: Bus
         Then Bus with ID = 24586269 should not be added
 
     Scenario: Getting Latitude and longitude values from DB
-        Given Trying to get longitude and latitude from bus ID = 24583598
+        Given Trying to get longitude ("-8.623562") and latitude ("41.15869") from bus ID = 24583598
         When Searching for values in database
-        Then It should return list with values
+        Then It should return list with values that are expected (Lon = "-8.623562" lat = "41.15869"

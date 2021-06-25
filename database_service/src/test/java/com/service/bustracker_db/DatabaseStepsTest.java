@@ -119,7 +119,7 @@ public class DatabaseStepsTest extends DatabaseServiceApplicationTests {
     /*
         Scenario 3: Getting Latitude and longitude values from DB
      */
-    @Given("Trying to get longitude and latitude from bus ID = {int}")
+    @Given("Trying to get longitude {string} and latitude {string} from bus ID = {int}")
     public void receiveBusID(int id){
         busIDTest=id;
     }
@@ -130,9 +130,14 @@ public class DatabaseStepsTest extends DatabaseServiceApplicationTests {
         List<String> latLongValues = dataBusController.getLatitudeAndLongitude(auxBusID);
         return latLongValues;
     }
-    @Then("It should return list with values")
+    @Then("It should return list with values that are expected (Lon = {string} lat = {string}")
     public void checkIfReceived(){
+
         assertFalse(latLongValues.isEmpty());
+        String aux1 = latLongValues.get(0);
+        String aux2 = latLongValues.get(1);
+        assertEquals(longTest,aux1 );
+        assertEquals(longTest,aux2 );
     }
 
 }
