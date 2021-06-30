@@ -30,6 +30,12 @@
           <name>es2021</name>
           <url>http://192.168.160.49:8081/artifactory/es2021</url>
         </repository>
+        <repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>es2021</name>
+          <url>http://192.168.160.49:8081/artifactory/es2021</url>
+        </repository>
       </repositories>
       <pluginRepositories>
         <pluginRepository>
