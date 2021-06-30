@@ -11,6 +11,7 @@ for i in ${!MODULES[@]}; do
 
 	rm -rf target	
 	mvn -U install
+	mvn -U compile
 	mvn -f pom.xml clean package --settings ../settings.xml deploy
 	cd ..
 done
