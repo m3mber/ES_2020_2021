@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     if (!listening) {
-      eventSource = new EventSource('http://localhost:8080/alarm');
+      eventSource = new EventSource('http://localhost:13001/alarm');
 
       eventSource.onopen = (event) => {
         console.log('connection opened');

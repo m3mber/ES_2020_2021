@@ -76,7 +76,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
   >([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8084/bus/routes?busId=${busId}`)
+    fetch(`http://localhost:13004/bus/routes?busId=${busId}`)
       .then((res) => res.json())
       .then((result) => {
         for (let i = 0; i < result.length; i = i + 2) {
@@ -93,7 +93,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
     getBusStops();
     if (!listening) {
       eventSource = new EventSource(
-        `http://localhost:8080/location?id=${busId}`
+        `http://localhost:13001/location?id=${busId}`
       );
 
       eventSource.onopen = (event) => {
@@ -133,7 +133,7 @@ const BusTrackingModal: React.FC<IBusTrackingModalProps> = ({
 
   const getBusStops = async () => {
     const databaseResponse = await fetch(
-      `http://localhost:8084/bus/locations?busId=${busId}`
+      `http://localhost:13004/bus/locations?busId=${busId}`
     );
     const body = await databaseResponse.json();
     for (let i = 0; i < body.length; i = i + 2) {
