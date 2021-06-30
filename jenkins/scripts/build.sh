@@ -3,6 +3,8 @@ set -e
 
 MODULES=(
 	realtime-service
+	distance_service/bustracker
+	database_service
 )
 
 for i in ${!MODULES[@]}; do
