@@ -3,7 +3,6 @@ set -e
 
 MODULES=(
 	realtime-service
-	distance_service/bustracker
 	database_service
 )
 
@@ -15,3 +14,10 @@ for i in ${!MODULES[@]}; do
 	mvn -f pom.xml clean package --settings ../settings.xml deploy
 	cd ..
 done
+
+cd distance_service/bustracker
+rm -rf target	
+mvn -U install
+mvn -f pom.xml clean package --settings ../../settings.xml deploy
+cd ../..
+
